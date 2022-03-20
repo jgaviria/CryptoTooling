@@ -1,6 +1,7 @@
 defmodule Poeticoins.Exchanges.BitstampClient do
   alias Poeticoins.{Trade, Product}
   alias Poeticoins.Exchanges.Client
+  alias Poeticoins.Exchanges
   require Client
 
   Client.defclient exchange_name: "bitstamp",
@@ -20,13 +21,15 @@ defmodule Poeticoins.Exchanges.BitstampClient do
             "data" => %{
               "channel" => "live_trades_#{currency_pair}"
             }
-          } |> Jason.encode!()
+          }
+          |> Jason.encode!()
     {:text, msg}
   end
 
   @impl true
-  def handle_ws_message(%{"event" => "trade"}=msg, state) do
-    _trade = message_to_trade(msg) |> IO.inspect(label: "bitstamp")
+  def handle_ws_message(%{"event" => "trade"} = msg, state) do
+    {:ok, trade} = message_to_trade(msg)
+    Exchanges.broadcast(trade)
     {:noreply, state}
   end
 
@@ -37,21 +40,24 @@ defmodule Poeticoins.Exchanges.BitstampClient do
 
 
   @spec message_to_trade(map()) :: {:ok, Trade.t()} | {:error, any()}
-  def message_to_trade(%{"data" => data, "channel" => "live_trades_" <> currency_pair}=_msg)
+  def message_to_trade(%{"data" => data, "channel" => "live_trades_" <> currency_pair} = _msg)
       when is_map(data)
     do
 
     with :ok <- validate_required(data, ["amount_str", "price_str", "timestamp"]),
          {:ok, traded_at} <- timestamp_to_datetime(data["timestamp"])
       do
-      Trade.new(
-        product: Product.new(exchange_name(), currency_pair),
-        price: data["price_str"],
-        volume: data["amount_str"],
-        traded_at: traded_at
-      )
+      {
+        :ok,
+        Trade.new(
+          product: Product.new(exchange_name(), currency_pair),
+          price: data["price_str"],
+          volume: data["amount_str"],
+          traded_at: traded_at
+        )
+      }
     else
-      {:error, _reason}=error -> error
+      {:error, _reason} = error -> error
     end
   end
 
@@ -66,6 +72,4 @@ defmodule Poeticoins.Exchanges.BitstampClient do
         {:error, :invalid_timestamp_string}
     end
   end
-
-
 end
