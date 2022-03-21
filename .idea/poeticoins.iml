@@ -64,6 +64,15 @@
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/plug_crypto" />
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/plug" />
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/cowboy" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/parse_trans" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/hackney" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/mimerl" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/certifi" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/tzdata" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/unicode_util_compat" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/ssl_verify_fun" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/metrics" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/idna" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -100,5 +109,6 @@
     <orderEntry type="library" name="cowlib" level="project" />
     <orderEntry type="library" name="erlex" level="project" />
     <orderEntry type="library" name="credo" level="project" />
+    <orderEntry type="library" name="tzdata" level="project" />
   </component>
 </module>
